@@ -69,11 +69,17 @@
   align-self: flex-end;
 }
 
-.already_ac {
+.already_ac > span:nth-of-type(1) {
   font-size: 14px;
   color: var(--gray);
 }
 
+.already_ac > span:nth-of-type(2) {
+  color: var(--location);
+}
+.already_ac:hover {
+  cursor: pointer;
+}
 .authForm {
   background-color: var(--cardColor);
   border-radius: 1rem;

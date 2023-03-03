@@ -6,7 +6,12 @@ import connectDB from './mongodb/connect.js';
 import AuthRoute from './routes/authRoute.js';
 import UserRoute from './routes/userRoute.js';
 import PostRoute from './routes/postRoute.js';
+import UploadRoute from './routes/uploadRoute.js';
+
 const app = express();
+
+app.use(express.static('public'));
+app.use('/images', express.static('images'));
 app.use(cors());
 dotenv.config();
 
@@ -32,3 +37,4 @@ startServer();
 app.use('/auth', AuthRoute);
 app.use('/user', UserRoute);
 app.use('/post', PostRoute);
+app.use('/upload', UploadRoute);

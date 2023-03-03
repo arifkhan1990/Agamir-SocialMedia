@@ -1,7 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './auth.css';
 import Logo from '../../img/logo.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { logIn, signUp } from '../../actions/AuthAction.js';
 const Auth = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.authReducer.loading);
+  const [isSignup, setIsSignup] = useState(true);
+  const [confirmPass, setConfirmPass] = useState(true);
+  const [data, setData] = useState({
+    firstname: '',
+    lastname: '',
+    username: '',
+    password: '',
+    confirmpassword: '',
+  });
+
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      data.password === data.confirmpassword
+        ? dispatch(signUp(data))
+        : setConfirmPass(false);
+    } else {
+      dispatch(logIn(data));
+    }
+  };
+
+  const resetForm = () => {
+    setConfirmPass(true);
+    setData({
+      firstname: '',
+      lastname: '',
+      username: '',
+      password: '',
+      confirmpassword: '',
+    });
+  };
   return (
     <div className='Auth'>
       <div className='a-left'>
@@ -11,92 +50,98 @@ const Auth = () => {
           <h6>Explore the ideas throughout the world</h6>
         </div>
       </div>
-      {/* <SignUp /> */}
-      <LogIn />
+      <div className='a-right'>
+        <form action='' className='infoForm authForm' onSubmit={handleSubmit}>
+          <h3>{isSignup ? 'Sign Up' : 'Login'}</h3>
+          {isSignup && (
+            <div>
+              <input
+                type='text'
+                name='firstname'
+                placeholder='First Name'
+                className='infoInput'
+                onChange={handleChange}
+                value={data.firstname}
+              />
+              <input
+                type='text'
+                name='lastname'
+                placeholder='Last Name'
+                className='infoInput'
+                onChange={handleChange}
+                value={data.lastname}
+              />
+            </div>
+          )}
+          <div>
+            <input
+              type='text'
+              name='username'
+              className='infoInput'
+              placeholder='User name'
+              onChange={handleChange}
+              value={data.username}
+            />
+          </div>
+          <div>
+            <input
+              type='password'
+              name='password'
+              className='infoInput'
+              placeholder='Password'
+              onChange={handleChange}
+              value={data.password}
+            />
+            {isSignup && (
+              <input
+                type='password'
+                name='confirmpassword'
+                className='infoInput'
+                placeholder='Confirm Password'
+                onChange={handleChange}
+                value={data.confirmpassword}
+              />
+            )}
+          </div>
+          <span
+            style={{
+              display: confirmPass ? 'none' : 'block',
+              color: 'red',
+              fontSize: '12px',
+              alignSelf: 'flex-end',
+              marginRight: '5px',
+            }}
+          >
+            * Confirm Password is not same
+          </span>
+          {isSignup ? (
+            <div
+              className='already_ac'
+              onClick={() => {
+                setIsSignup((prev) => !prev);
+                resetForm();
+              }}
+            >
+              <span>Already have an account</span> <span>Login!</span>
+            </div>
+          ) : (
+            <div
+              className='already_ac'
+              onClick={() => {
+                setIsSignup((prev) => !prev);
+                resetForm();
+              }}
+            >
+              <span>You have no account</span> <span>Sign Up!</span>
+            </div>
+          )}
+          <button className='button in-btn' type='submit' disabled={loading}>
+            {loading ? 'Loading...' : isSignup ? 'SignUp' : 'Login'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
-
-function LogIn() {
-  return (
-    <div className='a-right'>
-      <form action='' className='infoForm authForm'>
-        <h3>Login</h3>
-        <div>
-          <input
-            type='text'
-            name='username'
-            className='infoInput'
-            placeholder='User name'
-          />
-        </div>
-        <div>
-          <input
-            type='text'
-            name='password'
-            className='infoInput'
-            placeholder='Password'
-          />
-        </div>
-        <div>
-          <span className='already_ac'>You have no account.</span>{' '}
-          <span style={{ color: 'var(--orange)' }}>Sign Up!</span>
-        </div>
-        <button className='button in-btn'>Login</button>
-      </form>
-    </div>
-  );
-}
-
-function SignUp() {
-  return (
-    <div className='a-right'>
-      <form action='' className='infoForm authForm'>
-        <h3>Sign Up</h3>
-        <div>
-          <input
-            type='text'
-            name='firstname'
-            placeholder='First Name'
-            className='infoInput'
-          />
-          <input
-            type='text'
-            name='lastname'
-            placeholder='Last Name'
-            className='infoInput'
-          />
-        </div>
-        <div>
-          <input
-            type='text'
-            name='username'
-            className='infoInput'
-            placeholder='User name'
-          />
-        </div>
-        <div>
-          <input
-            type='text'
-            name='password'
-            className='infoInput'
-            placeholder='Password'
-          />
-          <input
-            type='text'
-            name='confirmpassword'
-            className='infoInput'
-            placeholder='Confirm Password'
-          />
-        </div>
-        <div>
-          <span className='already_ac'>Already have an account.</span>{' '}
-          <span style={{ color: 'var(--orange)' }}>Login!</span>
-        </div>
-        <button className='button in-btn'>SignUp</button>
-      </form>
-    </div>
-  );
-}
 
 export default Auth;

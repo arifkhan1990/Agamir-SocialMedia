@@ -1,6 +1,7 @@
 import PostModel from '../mongoDB/models/postModel.js';
 import UserModel from '../mongoDB/models/userModel.js';
 import mongoose from 'mongoose';
+
 export const createPost = async (req, res) => {
   const newPost = new PostModel(req.body);
 
